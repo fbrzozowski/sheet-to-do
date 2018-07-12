@@ -2,7 +2,7 @@
 
 class App {
     constructor(tasks) {
-        this.eventHandler = new EventHandler(this);
+        this.eventHandler = new EventListener(this);
         this.appStorage = window.localStorage;
         this.initializeTasksFromLocalStorage(tasks);
     }
@@ -69,26 +69,50 @@ class App {
     }
 
     editTaskName(id) {
-        var card = document.getElementById(id);
-        var title = card.getElementsByClassName("card-header-title")[0];
-        title.style.display = "none";
-        var input = card.getElementsByTagName("input")[0];
+        var card = document.getElementById(id).childNodes;
+        card[1].style.display = "none";
+        var input = card[5];
         input.setAttribute("type", "text");
         input.focus();
-        card.getElementsByTagName("input")[0].setAttribute("value", title.innerHTML);
+        input.setAttribute("value", card[1].innerHTML);
     }
 
     saveTitle(id) {
-        var card = document.getElementById(id);
-        var title = card.getElementsByClassName("card-header-title")[0];
+        var card = document.getElementById(id).childNodes;
+        var title = card[1];
         title.style.display = "";
-        var input = card.getElementsByTagName("input")[0];
+        var input = card[5];
         input.setAttribute("type", "hidden");
         title.innerHTML = input.value;
         var task = this.getTask(id);
         task.setName(input.value);
         this.appStorage.setItem('tasks', JSON.stringify(this.tasks));
+    }
 
+    editDescription(id) {
+        var card = document.getElementById(id).childNodes;
+        var title = card[7];
+        var input = card[9];
+
+        title.classList.add("hidden");
+        input.classList.remove("hidden");
+        var task = this.getTask(id);
+        input.setAttribute("value", card[1].innerHTML);
+        input.focus();
+        this.appStorage.setItem('tasks', JSON.stringify(this.tasks));
+    }
+
+    saveEditDescription(id) {
+        var card = document.getElementById(id).childNodes;
+        var title = card[7];
+        var input = card[9];
+        var task = this.getTask(id);
+
+        input.classList.add("hidden");
+        task.setName(input.value);
+        title.innerHTML = input.value;
+        title.classList.remove("hidden");
+        this.appStorage.setItem('tasks', JSON.stringify(this.tasks));
     }
 
     addNewNote() {
@@ -143,115 +167,127 @@ class Task {
     randomColor() {
         var classes = ['has-background-info', 'has-background-primary', 'has-background-link', 'has-background-warning', 'has-background-danger'];
         return classes[Math.floor(Math.random() * classes.length)];
-        }
-        generateCard() {
-            // var card = this.htmlToElement('<div class="column"><div class="card" id="' + this.id + '"><header class="card-header"><p class="card-header-title" data-id="' + this.id + '">' + this.name + '</p><input data-id="' + this.id + '" class="note-title" name="name" type="hidden"></header><div class="card-content"><div class="content">' + this.description + '</div></div><footer class="card-footer"><a href="#" class="card-footer-item uppercase" data-id="' + this.id + '"><i class="fas fa-trash fa-lg red mr-7"></i> Delete</a></footer></div></div>');
-            var card = this.htmlToElement(`<div class="tile is-parent is-vertical">
-        <article class="tile is-child ${ this.randomColor() } notification is-primary">
-          <p class="title">${ this.name }</p>
-          <p class="subtitle">${this.description}</p>
-        </article>
-      </div>`)
-            return card;
-        }
+    }
+    generateCard() {
+        var card = this.htmlToElement(
+            `<div class="flex tile is-parent is-vertical">
+                <article id="${ this.id }" class="article tile is-child ${ this.randomColor() } notification is-primary">
+                  <p class="title">${ this.name }</p>
+                  <span class="remove"><i class="fas fa-trash fa-lg"></i></span>
+                  <input type="hidden" class="title stkv-o-text-input"/>
+                  <p class="subtitle">${ this.description }</p>
+                  <textarea class="hidden title stkv-o-text-input small-font"></textarea>
 
-        htmlToElement(html) {
-            var template = document.createElement('template');
-            // html = html.trim(); // Never return a text node of whitespace as the result
-            template.innerHTML = html;
-            return template.content.firstChild;
+                </article>
+            </div>`
+        );
+        return card;
+    }
+
+    htmlToElement(html) {
+        var template = document.createElement('template');
+        // html = html.trim(); // Never return a text node of whitespace as the result
+        template.innerHTML = html;
+        return template.content.firstChild;
+    }
+}
+
+class EventListener {
+    constructor(app) {
+        this.app = app;
+    }
+
+    editTitleListener() {
+        var elementsArray = document.getElementsByClassName('article');
+        for (var i = 0; i < elementsArray.length; i++) {
+            elementsArray[i].childNodes[1].addEventListener("dblclick", (e) => {
+                var id = e.target.parentNode.id;
+                this.app.editTaskName(id);
+            });
+            elementsArray[i].childNodes[5].addEventListener("focusout", (e) => {
+                var id = e.target.parentNode.id;
+                this.app.saveTitle(id);
+            });
         }
     }
 
-    class EventHandler {
-        constructor(app) {
-            this.app = app;
-        }
+    addNewTaskModalOpen() {
+        document.querySelector('a#open-modal').addEventListener('click', (e) => {
+            e.preventDefault();
+            var modal = document.querySelector('.modal'); // assuming you have only 1
+            var html = document.querySelector('html');
+            modal.classList.add('is-active');
+            html.classList.add('is-clipped');
 
-        editTitleListener() {
-            var elementsArray = document.getElementsByClassName('card-header');
-            for (var i = 0; i < elementsArray.length; i++) {
-                elementsArray[i].childNodes[0].addEventListener("dblclick", (e) => {
-                    var id = e.target.getAttribute("data-id");
-                    this.app.editTaskName(id);
-                });
-                elementsArray[i].childNodes[1].addEventListener("focusout", (e) => {
-                    var id = e.target.getAttribute("data-id");
-                    this.app.saveTitle(id);
-                });
-            }
-        }
-
-        addNewTaskModalOpen() {
-            document.querySelector('a#open-modal').addEventListener('click', (e) => {
+            modal.querySelector('.modal-background').addEventListener('click', (e) => {
                 e.preventDefault();
-                var modal = document.querySelector('.modal'); // assuming you have only 1
-                var html = document.querySelector('html');
-                modal.classList.add('is-active');
-                html.classList.add('is-clipped');
-
-                modal.querySelector('.modal-background').addEventListener('click', (e) => {
-                    e.preventDefault();
-                    modal.classList.remove('is-active');
-                    html.classList.remove('is-clipped');
-                });
-
-                modal.querySelector("#save-task").addEventListener('click', (e) => {
-                    e.preventDefault();
-                    modal.classList.remove('is-active');
-                    html.classList.remove('is-clipped');
-                });
+                modal.classList.remove('is-active');
+                html.classList.remove('is-clipped');
             });
-        }
 
-        removeNoteButtonListener() {
-            var elementsArray = document.getElementsByClassName('card-footer-item');
-            for (var i = 0; i < elementsArray.length; i++) {
-                elementsArray[i].addEventListener("click", (e) => {
-                    var id = e.target.getAttribute("data-id");
-                    this.app.removeTask(id);
-                });
-            }
-        }
-
-        editDescriptionListener() {
-            var elementsArray = document.getElementsByClassName('card-header');
-            for (var i = 0; i < elementsArray.length; i++) {
-                elementsArray[i].childNodes[0].addEventListener("dblclick", (e) => {
-                    var id = e.target.getAttribute("data-id");
-                    this.app.editTaskName(id);
-                });
-                elementsArray[i].childNodes[1].addEventListener("focusout", (e) => {
-                    var id = e.target.getAttribute("data-id");
-                    this.app.saveTitle(id);
-                });
-            }
-        }
-
-        saveNewTaskFromModal() {
-            var saveNoteButton = document.getElementById("save-task");
-            saveNoteButton.addEventListener("click", (e) => {
-                this.app.addNewNote();
+            modal.querySelector("#save-task").addEventListener('click', (e) => {
+                e.preventDefault();
+                modal.classList.remove('is-active');
+                html.classList.remove('is-clipped');
             });
-        }
+        });
+    }
 
-        start() {
-            this.removeNoteButtonListener();
-            this.editTitleListener();
-            this.addNewTaskModalOpen();
-        }
-        startOnce() {
-            this.saveNewTaskFromModal();
+    removeNoteButtonListener() {
+        var elementsArray = document.getElementsByClassName('remove');
+        for (var i = 0; i < elementsArray.length; i++) {
+            elementsArray[i].addEventListener("click", (e) => {
+                console.log(e);
+                var id = e.target.parentNode.parentNode.parentNode.id;
+                this.app.removeTask(id);
+            });
         }
     }
 
-    window.onload = () => {
-        var tasks = JSON.parse(window.localStorage.getItem("tasks"));
-        const app = new App(tasks);
 
-        app.renderCardsWithTasks();
-        app.startAddNoteEventListener();
-        setTimeout(() => {
-            app.startEventListener();
-        }, 400)
-    };
+    editDescriptionListener() {
+        var elementsArray = document.getElementsByClassName('article');
+        console.log(elementsArray);
+        for (var i = 0; i < elementsArray.length; i++) {
+            elementsArray[i].childNodes[7].addEventListener("dblclick", (e) => {
+                var id = e.target.parentNode.id;
+                this.app.editDescription(id);
+            });
+        }
+        for (var i = 0; i < elementsArray.length; i++) {
+            elementsArray[i].childNodes[9].addEventListener("focusout", (e) => {
+                var id = e.target.parentNode.id;
+                this.app.saveEditDescription(id);
+            });
+        }
+    }
+
+
+    saveNewTaskFromModal() {
+        var saveNoteButton = document.getElementById("save-task");
+        saveNoteButton.addEventListener("click", (e) => {
+            this.app.addNewNote();
+        });
+    }
+
+    start() {
+        this.removeNoteButtonListener();
+        this.editTitleListener();
+        this.addNewTaskModalOpen();
+        this.editDescriptionListener();
+    }
+    startOnce() {
+        this.saveNewTaskFromModal();
+    }
+}
+
+window.onload = () => {
+    var tasks = JSON.parse(window.localStorage.getItem("tasks"));
+    const app = new App(tasks);
+
+    app.renderCardsWithTasks();
+    app.startAddNoteEventListener();
+    setTimeout(() => {
+        app.startEventListener();
+    }, 400)
+};

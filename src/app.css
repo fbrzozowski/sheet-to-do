@@ -4,6 +4,14 @@ html {
     font-family: 'Lato', sans-serif;
     letter-spacing: 0.03em;
 }
+.small-font {
+    margin-top: 15px !important;
+    font-size: 1em !important;
+}
+
+.hidden {
+    display: none;
+}
 
 .blue {
     color: #008bcf;
@@ -26,8 +34,30 @@ html {
     font-weight: 600;
 }
 
-.flex {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.remove {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+}
+
+.title {
+    width: 100%;
+}
+
+.stkv-o-text-input {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    outline: 0;
+    border: 0;
+    border-bottom: 1px solid;
+    background: none;
+    padding: 0 0 10px;
+    width: 100%;
+    font-family: inherit;
+    font-size: 30px;
+    font-weight: 600;
+    line-height: 1.25;
 }
