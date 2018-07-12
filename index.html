@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>SheetToDo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css" />
+    <link rel="stylesheet" href="src/app.css" />
+    <script defer src="https://use.fontawesome.com/releases/v5.1.0/js/all.js"></script>
+</head>
+
+<body>
+    <section class="container">
+        <nav class="navbar">
+            <div class="navbar-brand flex">
+                <a class="navbar-item" href="index.html"><strong><i class="fas fa-lg fa-book-open blue"></i>&nbsp;SheetToDo</strong></a>
+                <div class="navbar-burger burger" data-target="navbarExampleTransparentExample">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+            <div id="navbarExampleTransparentExample" class="navbar-menu">
+                <div class="navbar-start">
+                    <a class="navbar-item uppercase" href="#" id="open-modal"><i class="fas fa-lg fa-plus-circle green"></i>&nbsp;New note</a>
+                </div>
+            </div>
+        </nav>
+    </section>
+    <section class="section">
+        <div class="container">
+            <div id="tasks"></div>
+        </div>
+    </section>
+    <footer class="footer">
+        <div class="content has-text-centered">
+            <p>
+                <i class="fas fa-code blue"></i> by <a href="https://github.com/fbrzozowsk">Filip Brzozowski</a>. The source code is licensed
+                <a href="http://opensource.org/licenses/mit-license.php">MIT</a>.
+            </p>
+        </div>
+    </footer>
+    <div class="modal">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+            <header class="modal-card-head">
+                <p class="modal-card-title uppercase">New Note</p>
+            </header>
+            <section class="modal-card-body">
+                <div class="field">
+                    <label class="label">Title</label>
+                    <div class="control">
+                        <input class="input" id="modal-title-input" type="text" placeholder="Title here...">
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Description</label>
+                    <div class="control">
+                        <textarea class="textarea" id="modal-description-input" placeholder="Type your description here..."></textarea>
+                    </div>
+                </div>
+            </section>
+            <footer class="modal-card-foot">
+                <button class="button is-success" id="save-task">Save</button>
+            </footer>
+        </div>
+    </div>
+    <script src="src/app.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+        // Get all "navbar-burger" elements
+        var $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+
+        // Check if there are any nav burgers
+        if ($navbarBurgers.length > 0) {
+
+            // Add a click event on each of them
+            $navbarBurgers.forEach(function($el) {
+                $el.addEventListener('click', function() {
+
+                    // Get the target from the "data-target" attribute
+                    var target = $el.dataset.target;
+                    var $target = document.getElementById(target);
+
+                    // Toggle the class on both the "navbar-burger" and the "navbar-menu"
+                    $el.classList.toggle('is-active');
+                    $target.classList.toggle('is-active');
+
+                });
+            });
+        }
+
+    });
+    </script>
+</body>
+</html>
