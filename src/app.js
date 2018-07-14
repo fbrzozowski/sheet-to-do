@@ -9,13 +9,11 @@ class App {
 
     initializeTasksFromLocalStorage(tasks) {
         if (tasks == null) {
-
             this.tasks = [new Task(undefined,
                 "Hello user!!!",
                 "To add new note click 'new note' at the top of the page." +
                 "To edit title/description just double click on the text. ;)"
             )];
-
         } else {
             this.tasks = [];
             tasks.forEach((task) => {
@@ -45,6 +43,7 @@ class App {
         } else {
             container_block.innerHTML = "";
         }
+
         this.tasks.forEach(task => {
             var card = task.generateCard()
             container_block.appendChild(card);
@@ -90,29 +89,31 @@ class App {
     }
 
     editDescription(id) {
+        // var converter = new showdown.Converter();
         var card = document.getElementById(id).childNodes;
-        var title = card[7];
+        console.log(card);
+        var description = card[7];
         var input = card[9];
 
-        title.classList.add("hidden");
+        description.classList.add("hidden");
         input.classList.remove("hidden");
         var task = this.getTask(id);
-        input.setAttribute("value", card[1].innerHTML);
         input.focus();
-        this.appStorage.setItem('tasks', JSON.stringify(this.tasks));
+        input.innerHTML = task.getDescription();
+        // input.innerHTML = converter.stripHtml(description.innerHTML);
     }
 
     saveEditDescription(id) {
         var card = document.getElementById(id).childNodes;
-        var title = card[7];
+        var description = card[7];
         var input = card[9];
         var task = this.getTask(id);
-
         input.classList.add("hidden");
-        task.setName(input.value);
-        title.innerHTML = input.value;
-        title.classList.remove("hidden");
+        task.setDescription(input.value);
+        description.innerHTML = input.value;
+        description.classList.remove("hidden");
         this.appStorage.setItem('tasks', JSON.stringify(this.tasks));
+        this.toMarkdownParser();
     }
 
     addNewNote() {
@@ -138,6 +139,18 @@ class App {
         this.renderCardsWithTasks();
         this.startEventListener();
     }
+
+    toMarkdownParser() {
+        var allDescriptions = document.getElementsByClassName("subtitle");
+        var reader = new commonmark.Parser({smart: true});
+        var writer = new commonmark.HtmlRenderer({sourcepos: true, softbreak: "<br />"});
+
+        for (var i = 0; i < allDescriptions.length; i++) {
+            var description = allDescriptions[i];
+            var parsed = reader.parse(description.innerHTML); // parsed is a 'Node' tree
+            description.innerHTML = writer.render(parsed);
+        }
+    }
 }
 
 class Task {
@@ -145,6 +158,22 @@ class Task {
         this.id = id;
         this.name = name;
         this.description = description;
+        this.color = 'has-background-info';
+    }
+
+    setColor(color) {
+        // has-background-dark 
+        // has-background-primary
+        // has-background-info
+        // has-background-link
+        // has-background-success
+        // has-background-warning
+        // has-background-danger
+        this.color = color;
+    }
+
+    getColor() {
+        return this.color;
     }
 
     static incrementId() {
@@ -160,24 +189,27 @@ class Task {
         this.name = name;
     }
 
+    getName() {
+        return this.name;
+    }
+
     setDescription(description) {
         this.description = description;
     }
 
-    randomColor() {
-        var classes = ['has-background-info', 'has-background-primary', 'has-background-link', 'has-background-warning', 'has-background-danger'];
-        return classes[Math.floor(Math.random() * classes.length)];
+    getDescription() {
+        return this.description;
     }
+    
     generateCard() {
         var card = this.htmlToElement(
             `<div class="flex tile is-parent is-vertical">
-                <article id="${ this.id }" class="article tile is-child ${ this.randomColor() } notification is-primary">
+                <article id="${ this.id }" class="article tile is-child ${ this.color } notification is-primary">
                   <p class="title">${ this.name }</p>
                   <span class="remove"><i class="fas fa-trash fa-lg"></i></span>
                   <input type="hidden" class="title stkv-o-text-input"/>
                   <p class="subtitle">${ this.description }</p>
-                  <textarea class="hidden title stkv-o-text-input small-font"></textarea>
-
+                  <textarea class="hidden title stkv-o-text-input small-font h-100"></textarea>
                 </article>
             </div>`
         );
@@ -237,7 +269,6 @@ class EventListener {
         var elementsArray = document.getElementsByClassName('remove');
         for (var i = 0; i < elementsArray.length; i++) {
             elementsArray[i].addEventListener("click", (e) => {
-                console.log(e);
                 var id = e.target.parentNode.parentNode.parentNode.id;
                 this.app.removeTask(id);
             });
@@ -246,19 +277,19 @@ class EventListener {
 
 
     editDescriptionListener() {
-        var elementsArray = document.getElementsByClassName('article');
-        console.log(elementsArray);
+        var elementsArray = document.getElementsByClassName('subtitle');
         for (var i = 0; i < elementsArray.length; i++) {
-            elementsArray[i].childNodes[7].addEventListener("dblclick", (e) => {
-                var id = e.target.parentNode.id;
+            elementsArray[i].addEventListener("dblclick", (e) => {
+                var id = e.target.closest('article').id;
                 this.app.editDescription(id);
-            });
+            }, true);
         }
-        for (var i = 0; i < elementsArray.length; i++) {
-            elementsArray[i].childNodes[9].addEventListener("focusout", (e) => {
+        var elementsArrayInput = document.getElementsByClassName('stkv-o-text-input');
+        for (var i = 0; i < elementsArrayInput.length; i++) {
+            elementsArrayInput[i].addEventListener("focusout", (e) => {
                 var id = e.target.parentNode.id;
                 this.app.saveEditDescription(id);
-            });
+            }, true);
         }
     }
 
@@ -271,6 +302,7 @@ class EventListener {
     }
 
     start() {
+        this.app.toMarkdownParser();
         this.removeNoteButtonListener();
         this.editTitleListener();
         this.addNewTaskModalOpen();
@@ -281,13 +313,13 @@ class EventListener {
     }
 }
 
-window.onload = () => {
-    var tasks = JSON.parse(window.localStorage.getItem("tasks"));
-    const app = new App(tasks);
+// window.onload = () => {
+var tasks = JSON.parse(window.localStorage.getItem("tasks"));
+const app = new App(tasks);
 
-    app.renderCardsWithTasks();
-    app.startAddNoteEventListener();
-    setTimeout(() => {
-        app.startEventListener();
-    }, 400)
-};
+app.renderCardsWithTasks();
+app.startAddNoteEventListener();
+setTimeout(() => {
+    app.startEventListener();
+}, 400)
+// };
