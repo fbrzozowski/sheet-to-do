@@ -200,7 +200,7 @@ class Task {
     getDescription() {
         return this.description;
     }
-    
+
     generateCard() {
         var card = this.htmlToElement(
             `<div class="flex tile is-parent is-vertical">
