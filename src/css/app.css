@@ -1,8 +1,11 @@
 body,
 html {
-    font-family: 300 Lato, "Helvetica Neue", Helvetica, arial, sans-serif;
-    font-family: 'Lato', sans-serif;
+    font-family: 'Open Sans', sans-serif;
     letter-spacing: 0.03em;
+}
+
+a.is-red {
+    color: red !important;
 }
 
 .site {
@@ -77,7 +80,7 @@ html {
 .remove-container {
     position: absolute;
     top: 10px;
-    right: 15px;
+    right: 10px;
 }
 
 .title {

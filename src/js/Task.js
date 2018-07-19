@@ -39,18 +39,16 @@ export default class Task {
                     </div>
                     <div class="dropdown-menu" id="dropdown-menu" role="menu">
                         <div class="dropdown-content">
-                            <a class="remove dropdown-item"><i class="fas fa-trash-alt"></i> Delete</a>
+                            <a class="remove dropdown-item is-red"><i class="fas fa-trash-alt"></i> Delete</a>
                             <hr class="dropdown-divider">
                             <div class="dropdown-item is-centered">
-                                <p>Color picker</p>
+                                <p><i class="fas fa-palette"></i> Color picker</p>
                             </div>
-                            <a data-color="has-background-dark" class="color dropdown-item"><i class="fas fa-palette"></i> dark</a>
-                            <a data-color="has-background-primary" class="color dropdown-item"><i class="fas fa-palette"></i> primary</a>
-                            <a data-color="has-background-info" class="color dropdown-item"><i class="fas fa-palette"></i> info</a>
-                            <a data-color="has-background-link" class="color dropdown-item"><i class="fas fa-palette"></i> link</a>
-                            <a data-color="has-background-success" class="color dropdown-item"><i class="fas fa-palette"></i> success</a>
-                            <a data-color="has-background-warning" class="color dropdown-item"><i class="fas fa-palette"></i> warning</a>
-                            <a data-color="has-background-danger" class="color dropdown-item"><i class="fas fa-palette"></i> danger</a>
+                            <a data-color="has-background-dark" class="color is-primary dropdown-item">dark</a>
+                            <a data-color="has-background-primary" class="color dropdown-item">primary</a>
+                            <a data-color="has-background-info" class="color dropdown-item">info</a> <a data-color="has-background-link" class="color dropdown-item">link</a> <a data-color="has-background-success" class="color dropdown-item">success</a>
+                            <a data-color="has-background-warning" class="color dropdown-item">warning</a>
+                            <a data-color="has-background-danger" class="color dropdown-item">danger</a>
                         </div>
                     </div>
                 </div>
