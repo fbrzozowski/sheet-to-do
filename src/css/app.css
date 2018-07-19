@@ -9,13 +9,13 @@ a.is-red {
 }
 
 .site {
-  display: flex;
-  min-height: 100vh;
-  flex-direction: column;
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
 }
 
 .site-content {
-  flex: 1;
+    flex: 1;
 }
 
 .dropdown-content>div>p {
@@ -36,6 +36,7 @@ a.is-red {
 .is-active {
     display: block !important;
 }
+
 .small-font {
     margin-top: 15px !important;
     font-size: 1em !important;
@@ -87,20 +88,6 @@ a.is-red {
     width: 100%;
 }
 
-.stkv-o-text-input {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    outline: 0;
-    border: 0;
-    border-bottom: 1px solid;
-    background: none;
-    padding: 0 0 10px;
-    width: 100%;
-    font-family: inherit;
-    font-size: 30px;
-    font-weight: 600;
-    line-height: 1.25;
+.modal-card {
+    margin-top: 5em;
 }
