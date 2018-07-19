@@ -3,10 +3,37 @@ export default class EventListener {
         this.app = app;
     }
 
+    dropdownListener() {
+        var dropdownTriggers = Array.prototype.slice.call(document.getElementsByClassName('dropdown-trigger'));
+        dropdownTriggers.forEach(element => {
+            element.addEventListener("click", event => {
+                var article = event.target.closest('article');
+                article.querySelector('.dropdown-menu').classList.toggle('is-active');
+            });
+            element.addEventListener("focusout", event => {
+                var article = event.target.closest('article');
+                setTimeout(() => {
+                    article.querySelector('.dropdown-menu').classList.toggle('is-active');
+                }, 200);
+            });
+        });
+    }
+
+    changeColorListener() {
+        var colorList = Array.prototype.slice.call(document.getElementsByClassName('color'));
+        colorList.forEach(element => {
+            element.addEventListener("click", event => {
+                var id = event.target.closest('article').id;
+                var color = event.target.getAttribute('data-color');
+                this.app.changeTaskCardColor(id, color);
+            })
+        });
+    }
+
     editTitleListener() {
         var elementsArray = Array.prototype.slice.call(document.getElementsByClassName('article'));
         var container = '.title';
-        
+
         elementsArray.forEach(element => {
             element.querySelector(container).addEventListener("dblclick", (e) => {
                 var id = e.target.parentNode.id;
@@ -78,9 +105,10 @@ export default class EventListener {
 
     removeNoteButtonListener() {
         var elementsArray = Array.prototype.slice.call(document.getElementsByClassName('remove'));
+        console.log(elementsArray);
         elementsArray.forEach(element => {
-            element.addEventListener("click", (e) => {
-                var id = e.target.parentNode.parentNode.parentNode.id;
+            element.addEventListener("click", event => {
+                var id = event.target.closest('article').id;
                 this.app.removeTask(id);
             });
         });
@@ -94,11 +122,13 @@ export default class EventListener {
     }
 
     start() {
+        this.dropdownListener();
         this.removeNoteButtonListener();
         this.editTitleListener();
         this.addNewTaskModalOpen();
         this.editDescriptionListener();
         this.menuBurgerListener();
+        this.changeColorListener();
     }
     startOnce() {
         this.saveNewTaskFromModal();

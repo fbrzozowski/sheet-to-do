@@ -12,14 +12,15 @@ export default class App {
     initializeTasksFromLocalStorage(tasks) {
         if (tasks == null) {
             this.tasks = [new Task(undefined,
-                "Hello user!!!",
-                "To add new note click 'new note' at the top of the page." +
-                "To edit title/description just double click on the text. ;)"
+                "Hello World!!!",
+                "<p>To <strong>add new note</strong> click 'new note' at the top of the page.</p>" +
+                "<p>To <strong>edit title/description</strong> just double click on the text.</p>" +
+                "You can also <strong>delete & change cards' color</strong> by click the icon at the top right corner."
             )];
         } else {
             this.tasks = [];
             tasks.forEach((task) => {
-                var note = new Task(Task.incrementId(), task.name, task.description);
+                var note = new Task(Task.incrementId(), task.name, task.description, task.color);
                 this.tasks.push(note);
             });
         }
@@ -35,6 +36,16 @@ export default class App {
 
     getStorage() {
         return this.appStorage;
+    }
+
+    changeTaskCardColor(id, newColor) {
+        var task = this.getTask(id);
+        task.color = newColor;
+
+        this.renderCardsWithTasks();
+        this.startEventListener();
+
+        this.appStorage.setItem('tasks', JSON.stringify(this.tasks));
     }
 
     renderCardsWithTasks() {
@@ -71,10 +82,10 @@ export default class App {
         var taskCard = document.getElementById(id);
         var dataContainer = taskCard.querySelector(constainer);
         var task = this.getTask(id);
-        (constainer == '.title') ? task.name = dataContainer.innerHTML : task.description = dataContainer.innerHTML;
+        (constainer == '.title') ? task.name = dataContainer.innerHTML: task.description = dataContainer.innerHTML;
         this.appStorage.setItem('tasks', JSON.stringify(this.tasks));
     }
-    
+
     addNewNote() {
         var name = document.getElementById("modal-title-input");
         var description = document.getElementById("modal-description-input");
