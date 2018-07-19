@@ -105,7 +105,6 @@ export default class EventListener {
 
     removeNoteButtonListener() {
         var elementsArray = Array.prototype.slice.call(document.getElementsByClassName('remove'));
-        console.log(elementsArray);
         elementsArray.forEach(element => {
             element.addEventListener("click", event => {
                 var id = event.target.closest('article').id;
