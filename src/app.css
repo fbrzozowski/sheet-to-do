@@ -4,9 +4,17 @@ html {
     font-family: 'Lato', sans-serif;
     letter-spacing: 0.03em;
 }
+
 .small-font {
     margin-top: 15px !important;
     font-size: 1em !important;
+}
+
+[contenteditable="true"]:active,
+[contenteditable="true"]:focus {
+    border-bottom: 1px solid white;
+    font-style: italic;
+    padding: 0.5em;
 }
 
 .h-100 {

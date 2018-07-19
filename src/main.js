@@ -10,6 +10,8 @@ function createWindow() {
     // and load the index.html of the app.
     win.loadFile('index.html')
 
+    win.openDevTools();
+
     // Emitted when the window is closed.
     win.on('closed', () => {
         // Dereference the window object, usually you would store windows
@@ -36,6 +38,15 @@ function createWindow() {
             { label: "Paste", accelerator: "CmdOrCtrl+V", selector: "paste:" },
             { label: "Select All", accelerator: "CmdOrCtrl+A", selector: "selectAll:" }
         ]
+    }, {
+        label: "Notes",
+        submenu: [{
+            label: "Add new",
+            accelerator: "CmdOrCtrl+N",
+            click: function() {
+                win.getElementById('open-modal').click();
+            }
+        }, ]
     }];
 
     Menu.setApplicationMenu(Menu.buildFromTemplate(template));
