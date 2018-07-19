@@ -5,6 +5,16 @@ html {
     letter-spacing: 0.03em;
 }
 
+.site {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+.site-content {
+  flex: 1;
+}
+
 .dropdown-content>div>p {
     font-weight: 600px;
     text-transform: uppercase;

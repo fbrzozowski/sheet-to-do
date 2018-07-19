@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="src/css/app.css" />
 </head>
 
-<body>
+<body class="site">
     <section class="container">
         <nav class="navbar">
             <div class="navbar-brand flex">
@@ -28,20 +28,22 @@
             </div>
         </nav>
     </section>
-    <section class="section">
-        <div class="container">
-            <div id="content"></div>
-            <div id="tasks"></div>
-        </div>
+    <section class="container site-content">
+        <div id="content"></div>
+        <div id="tasks"></div>
     </section>
     <footer class="footer">
         <div class="content has-text-centered">
             <p>
-                <i class="fas fa-code blue"></i> by <a href="https://github.com/fbrzozowski">Filip Brzozowski</a>. The source code is licensed
+                <strong>SheetToDo</strong> by <a href="https://github.com/fbrzozowski">Filip Brzozowsk</a>. The source code is licensed
                 <a href="http://opensource.org/licenses/mit-license.php">MIT</a>.
+            </p>
+            <p>
+                View source code on <a href="https://github.com/fbrzozowski/sheet-to-do" target="_blank"><i class="fab fa-github"></i> Github</a>
             </p>
         </div>
     </footer>
+    <!-- MODAL -->
     <div class="modal">
         <div class="modal-background"></div>
         <div class="modal-card">
