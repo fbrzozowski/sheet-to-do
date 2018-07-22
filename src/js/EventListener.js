@@ -6,11 +6,11 @@ export default class EventListener {
     dropdownListener() {
         var dropdownTriggers = Array.prototype.slice.call(document.getElementsByClassName('dropdown-trigger'));
         dropdownTriggers.forEach(element => {
-            element.addEventListener("click", event => {
+            element.addEventListener('click', event => {
                 var article = event.target.closest('article');
                 article.querySelector('.dropdown-menu').classList.toggle('is-active');
             });
-            element.addEventListener("focusout", event => {
+            element.addEventListener('focusout', event => {
                 var article = event.target.closest('article');
                 setTimeout(() => {
                     article.querySelector('.dropdown-menu').classList.toggle('is-active');
@@ -22,11 +22,11 @@ export default class EventListener {
     changeColorListener() {
         var colorList = Array.prototype.slice.call(document.getElementsByClassName('color'));
         colorList.forEach(element => {
-            element.addEventListener("click", event => {
+            element.addEventListener('click', event => {
                 var id = event.target.closest('article').id;
                 var color = event.target.getAttribute('data-color');
-                this.app.changeTaskCardColor(id, color);
-            })
+                this.app.setTaskColor(id, color);
+            });
         });
     }
 
@@ -35,11 +35,7 @@ export default class EventListener {
         var container = '.title';
 
         elementsArray.forEach(element => {
-            element.querySelector(container).addEventListener("dblclick", (e) => {
-                var id = e.target.parentNode.id;
-                this.app.editTaskData(id, container);
-            });
-            element.querySelector(container).addEventListener("focusout", (e) => {
+            element.querySelector(container).addEventListener('focusout', (e) => {
                 var id = e.target.parentNode.id;
                 this.app.saveTaskData(id, container);
             });
@@ -51,14 +47,7 @@ export default class EventListener {
         var container = '.subtitle';
 
         elementsArray.forEach(element => {
-            element.querySelector(container).addEventListener("dblclick", (e) => {
-                var id = e.target.closest('article').id;
-                this.app.editTaskData(id, container);
-            }, true);
-        });
-
-        elementsArray.forEach(element => {
-            element.querySelector(container).addEventListener("focusout", (e) => {
+            element.querySelector(container).addEventListener('focusout', (e) => {
                 var id = e.target.closest('article').id;
                 this.app.saveTaskData(id, container);
             }, true);
@@ -66,18 +55,13 @@ export default class EventListener {
     }
 
     menuBurgerListener() {
-        document.addEventListener('DOMContentLoaded', function() {
-            var $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
-            if ($navbarBurgers.length > 0) {
-                $navbarBurgers.forEach(function($el) {
-                    $el.addEventListener('click', function() {
-                        var target = $el.dataset.target;
-                        var $target = document.getElementById(target);
-                        $el.classList.toggle('is-active');
-                        $target.classList.toggle('is-active');
-                    });
-                });
-            }
+        var navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'));
+        navbarBurgers.forEach(element => {
+            element.addEventListener('click', () => {
+                var target = document.getElementById(element.dataset.target);
+                element.classList.toggle('is-active');
+                target.classList.toggle('is-active');
+            });
         });
     }
 
@@ -95,7 +79,7 @@ export default class EventListener {
                 html.classList.remove('is-clipped');
             });
 
-            modal.querySelector("#save-task").addEventListener('click', (e) => {
+            modal.querySelector('#save-task').addEventListener('click', (e) => {
                 e.preventDefault();
                 modal.classList.remove('is-active');
                 html.classList.remove('is-clipped');
@@ -106,7 +90,7 @@ export default class EventListener {
     removeNoteButtonListener() {
         var elementsArray = Array.prototype.slice.call(document.getElementsByClassName('remove'));
         elementsArray.forEach(element => {
-            element.addEventListener("click", event => {
+            element.addEventListener('click', event => {
                 var id = event.target.closest('article').id;
                 this.app.removeTask(id);
             });
@@ -114,19 +98,19 @@ export default class EventListener {
     }
 
     saveNewTaskFromModal() {
-        var saveNoteButton = document.getElementById("save-task");
-        saveNoteButton.addEventListener("click", e => {
+        var saveNoteButton = document.getElementById('save-task');
+        saveNoteButton.addEventListener('click', () => {
             return this.app.addNewNote();
         });
     }
 
     start() {
+        this.menuBurgerListener();
         this.dropdownListener();
         this.removeNoteButtonListener();
         this.editTitleListener();
         this.addNewTaskModalOpen();
         this.editDescriptionListener();
-        this.menuBurgerListener();
         this.changeColorListener();
     }
     startOnce() {

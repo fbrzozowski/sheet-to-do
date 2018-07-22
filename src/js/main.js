@@ -1,10 +1,11 @@
-import { default as App } from './App.js';
+import { default as App } from './App.js'; 
 
-const tasks = JSON.parse(window.localStorage.getItem("tasks"));
+const tasks = JSON.parse(window.localStorage.getItem('tasks'));
 const SheetToDo = new App(tasks);
 
-SheetToDo.renderCardsWithTasks();
+SheetToDo.renderCards();
 SheetToDo.startAddNoteEventListener();
+
 setTimeout(() => {
     SheetToDo.startEventListener();
-}, 400)
+}, 400);

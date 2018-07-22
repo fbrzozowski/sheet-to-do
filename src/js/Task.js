@@ -15,20 +15,12 @@ export default class Task {
         return this.latestId;
     }
 
-    getName() {
-        return this.name;
-    }
-
-    getDescription() {
-        return this.description;
-    }
-
     generateCard() {
         var card = this.htmlToElement(
             `<div class="flex tile is-parent is-vertical">
                 <article id="${ this.id }" class="article tile is-child ${ this.color } notification is-primary">
-                  <p class="title">${ this.name }</p>
-                  <div class="subtitle">${ this.description }</div>
+                  <p class="title" contenteditable="true">${ this.name }</p>
+                  <div class="subtitle" contenteditable="true">${ this.description }</div>
                   <span class="remove-container"><div id="dropdown" class="dropdown is-right">
                     <div class="dropdown-trigger">
                         <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
@@ -46,7 +38,9 @@ export default class Task {
                             </div>
                             <a data-color="has-background-dark" class="color is-primary dropdown-item">dark</a>
                             <a data-color="has-background-primary" class="color dropdown-item">primary</a>
-                            <a data-color="has-background-info" class="color dropdown-item">info</a> <a data-color="has-background-link" class="color dropdown-item">link</a> <a data-color="has-background-success" class="color dropdown-item">success</a>
+                            <a data-color="has-background-info" class="color dropdown-item">info</a>
+                            <a data-color="has-background-link" class="color dropdown-item">link</a>
+                            <a data-color="has-background-success" class="color dropdown-item">success</a>
                             <a data-color="has-background-warning" class="color dropdown-item">warning</a>
                             <a data-color="has-background-danger" class="color dropdown-item">danger</a>
                         </div>

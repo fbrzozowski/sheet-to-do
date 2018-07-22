@@ -1,3 +1,4 @@
+// @ts-check
 import { default as EventListener } from './EventListener.js';
 import { default as Task } from './Task.js';
 
@@ -11,11 +12,11 @@ export default class App {
 
     initializeTasksFromLocalStorage(tasks) {
         if (tasks == null) {
-            this.tasks = [new Task(undefined,
-                "Hello World!!!",
-                "<p>To <strong>add new note</strong> click 'new note' at the top of the page.</p>" +
-                "<p>To <strong>edit title/description</strong> just double click on the text.</p>" +
-                "You can also <strong>delete & change cards' color</strong> by click the icon at the top right corner."
+            this.tasks = [new Task(undefined, // Task ID will be set dynamically
+                'Hello World!!!',
+                '<p>To <strong>add new note</strong> click \'new note\' at the top of the page.</p>' +
+                '<p>To <strong>edit title/description</strong> just double click on the text.</p>' +
+                'You can also <strong>delete & change cards\' color</strong> by click the icon at the top right corner.'
             )];
         } else {
             this.tasks = [];
@@ -34,33 +35,30 @@ export default class App {
         this.eventHandler.startOnce();
     }
 
-    getStorage() {
-        return this.appStorage;
-    }
-
-    changeTaskCardColor(id, newColor) {
+    setTaskColor(id, newColor) {
         var task = this.getTask(id);
         task.color = newColor;
 
-        this.renderCardsWithTasks();
+        this.renderCards();
         this.startEventListener();
 
         this.appStorage.setItem('tasks', JSON.stringify(this.tasks));
     }
 
-    renderCardsWithTasks() {
+    renderCards() {
         var container_block = document.getElementById('tasks');
 
         if (this.tasks.length == 0) {
-            container_block.innerHTML = "<h3>No tasks! Please add some. :)</h3>";
+            container_block.innerHTML = '<h3>No tasks! Please add some. :)</h3>';
         } else {
-            container_block.innerHTML = "";
+            container_block.innerHTML = '';
         }
 
         this.tasks.forEach(task => {
-            var card = task.generateCard()
+            var card = task.generateCard();
             container_block.appendChild(card);
         });
+        // this.parseToMarkdown();
     }
 
     addTask(task) {
@@ -69,13 +67,6 @@ export default class App {
 
     getTask(id) {
         return this.tasks.find(task => task.id == id);
-    }
-
-
-    editTaskData(id, container) {
-        var taskCard = document.getElementById(id);
-        var description = taskCard.querySelector(container);
-        description.contentEditable = true;
     }
 
     saveTaskData(id, constainer) {
@@ -87,38 +78,45 @@ export default class App {
     }
 
     addNewNote() {
-        var name = document.getElementById("modal-title-input");
-        var description = document.getElementById("modal-description-input");
+        var name = document.getElementById('modal-title-input');
+        var description = document.getElementById('modal-description-input');
 
         this.tasks.push(new Task(Task.incrementId(), name.value, description.value));
         this.appStorage.setItem('tasks', JSON.stringify(this.tasks));
 
-        this.renderCardsWithTasks();
+        this.renderCards();
         this.startEventListener();
 
         setTimeout(() => {
-            name.value = "";
-            description.value = "";
-        }, 400)
+            name.value = '';
+            description.value = '';
+        }, 400);
     }
 
     removeTask(id) {
         this.tasks = this.tasks.filter(item => item.id != id);
         this.appStorage.setItem('tasks', JSON.stringify(this.tasks));
 
-        this.renderCardsWithTasks();
+        this.renderCards();
         this.startEventListener();
     }
 
-    parseToMarkdown() { //WTF nazwa?
-        var allDescriptions = document.getElementsByClassName("subtitle");
-        var reader = new commonmark.Parser({ smart: true });
-        var writer = new commonmark.HtmlRenderer({ sourcepos: true, softbreak: "<br />" });
+    parseToMarkdown() {
+        var allDescriptions = Array.prototype.slice.call(document.getElementsByClassName('subtitle'));
 
-        for (var i = 0; i < allDescriptions.length; i++) {
-            var description = allDescriptions[i];
-            var parsed = reader.parse(description.innerHTML); // parsed is a 'Node' tree
-            description.innerHTML = writer.render(parsed);
-        }
+        var mdParser = new showdown.Converter({
+            smartIndentationFix: true,
+            tables: true,
+            tasklists: true,
+            simpleLineBreaks: true,
+            simplifiedAutoLink: true,
+            emoji: true
+        });
+
+        allDescriptions.forEach(element => {
+            var id = element.closest('article').id;
+            var task = this.getTask(id);
+            element.innerHTML = mdParser.makeHtml(task.description);
+        });
     }
 }

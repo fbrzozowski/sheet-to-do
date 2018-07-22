@@ -9,8 +9,10 @@ a.is-red {
 }
 
 .site {
+    width: 100% !important;
     display: flex;
     min-height: 100vh;
+    flex: 0 0 100%;
     flex-direction: column;
 }
 
