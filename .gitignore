@@ -2,6 +2,7 @@
 # Created by https://www.gitignore.io/api/node,sublimetext
 
 .idea/
+.eslintrc.json
 release-builds/
 .DS_Store
 ### Node ###
